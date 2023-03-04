@@ -9,6 +9,7 @@ namespace CurrencyService.Controllers
 	public class CurrenciesController : Controller
 	{
 		private readonly ICurrentCurrencyService _service;
+		
 
 		public CurrenciesController(ICurrentCurrencyService service)
         {
@@ -17,9 +18,11 @@ namespace CurrencyService.Controllers
 
 		[HttpGet]
 		[ActionName("currencies")]
-		public async Task<ActionResult<IEnumerable<Currency>>> GetCurrencies()
+		public async Task<ActionResult<IEnumerable<Currency>>> GetCurrencies([FromQuery] PagingInfo pagingInfo)
 		{
-			var currencies = await _service.GetCurrencies();
+			var currencies = (await _service.GetCurrencies())
+				.Skip((pagingInfo.CurrentPage - 1) * pagingInfo.ItemsPerPage)
+				.Take(pagingInfo.ItemsPerPage);
 
 			if (currencies == null)
 				return NotFound();
