@@ -1,3 +1,5 @@
+using CurrencyService.Data;
+
 namespace CurrencyService
 {
 	public class Program
@@ -5,9 +7,20 @@ namespace CurrencyService
 		public static void Main(string[] args)
 		{
 			var builder = WebApplication.CreateBuilder(args);
-			var app = builder.Build();
 
-			app.MapGet("/", () => "Hello World!");
+			builder.Services.AddControllers();
+
+			builder.Services.AddHttpClient("currencyClient", c =>
+			{
+				c.BaseAddress = new Uri("https://www.cbr-xml-daily.ru/daily_json.js");
+			});
+			
+			builder.Services.AddTransient<ICurrentCurrencyService, CurrentCurrencyService>();
+			
+			var app = builder.Build();
+			
+			app.UseRouting();
+			app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
 			app.Run();
 		}
