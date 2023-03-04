@@ -1,4 +1,5 @@
 using CurrencyService.Data;
+using Newtonsoft.Json.Serialization;
 
 namespace CurrencyService
 {
@@ -8,11 +9,15 @@ namespace CurrencyService
 		{
 			var builder = WebApplication.CreateBuilder(args);
 
-			builder.Services.AddControllers();
+			builder.Services.AddControllers().AddNewtonsoftJson(opts =>
+			{
+				opts.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+			});
 
 			builder.Services.AddHttpClient("currencyClient", c =>
 			{
-				c.BaseAddress = new Uri("https://www.cbr-xml-daily.ru/daily_json.js");
+				//URL-адрес списка курсов валют в формате JSON
+				c.BaseAddress = new Uri("https://www.cbr-xml-daily.ru/daily_json.js"); 
 			});
 
 			builder.Services.AddTransient<ICurrentCurrencyService, CurrentCurrencyService>();

@@ -23,9 +23,7 @@ namespace CurrencyService.Controllers
 		[ActionName("currencies")]
 		public async Task<ActionResult<IEnumerable<CurrencyReadDto>>> GetCurrencies([FromQuery] PagingInfo pagingInfo)
 		{
-			var currencies = (await _service.GetCurrencies())
-				.Skip((pagingInfo.CurrentPage - 1) * pagingInfo.ItemsPerPage)
-				.Take(pagingInfo.ItemsPerPage);
+			var currencies = await _service.GetCurrencies(pagingInfo);
 
 			if (currencies == null)
 				return NotFound();
@@ -33,7 +31,7 @@ namespace CurrencyService.Controllers
 			return Ok(_mapper.Map<IEnumerable<CurrencyReadDto>>(currencies));
 		}
 
-		[HttpGet]
+		[HttpGet("{currencyId}")]
 		[ActionName("currency")]
 		public async Task<ActionResult<CurrencyReadDto>> GetCurrency(string currencyId)
 		{
