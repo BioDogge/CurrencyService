@@ -14,11 +14,12 @@ namespace CurrencyService
 			{
 				c.BaseAddress = new Uri("https://www.cbr-xml-daily.ru/daily_json.js");
 			});
-			
+
 			builder.Services.AddTransient<ICurrentCurrencyService, CurrentCurrencyService>();
-			
+			builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 			var app = builder.Build();
-			
+
 			app.UseRouting();
 			app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 

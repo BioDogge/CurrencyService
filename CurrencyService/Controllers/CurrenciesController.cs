@@ -1,4 +1,6 @@
-﻿using CurrencyService.Data;
+﻿using AutoMapper;
+using CurrencyService.Data;
+using CurrencyService.Dtos;
 using CurrencyService.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,16 +11,17 @@ namespace CurrencyService.Controllers
 	public class CurrenciesController : Controller
 	{
 		private readonly ICurrentCurrencyService _service;
-		
+		private readonly IMapper _mapper;
 
-		public CurrenciesController(ICurrentCurrencyService service)
+		public CurrenciesController(ICurrentCurrencyService service, IMapper mapper)
         {
             _service = service;
+			_mapper = mapper;
         }
 
 		[HttpGet]
 		[ActionName("currencies")]
-		public async Task<ActionResult<IEnumerable<Currency>>> GetCurrencies([FromQuery] PagingInfo pagingInfo)
+		public async Task<ActionResult<IEnumerable<CurrencyReadDto>>> GetCurrencies([FromQuery] PagingInfo pagingInfo)
 		{
 			var currencies = (await _service.GetCurrencies())
 				.Skip((pagingInfo.CurrentPage - 1) * pagingInfo.ItemsPerPage)
@@ -27,19 +30,19 @@ namespace CurrencyService.Controllers
 			if (currencies == null)
 				return NotFound();
 
-			return Ok(currencies);
+			return Ok(_mapper.Map<IEnumerable<CurrencyReadDto>>(currencies));
 		}
 
 		[HttpGet]
 		[ActionName("currency")]
-		public async Task<ActionResult<Currency>> GetCurrency(string currencyId)
+		public async Task<ActionResult<CurrencyReadDto>> GetCurrency(string currencyId)
 		{
 			var currency = await _service.GetCurrencyById(currencyId);
 
 			if (currency == null) 
 				return NotFound();
 
-			return Ok(currency);
+			return Ok(_mapper.Map<CurrencyReadDto>(currency));
 		}
     }
 }
