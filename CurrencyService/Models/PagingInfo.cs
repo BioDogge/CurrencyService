@@ -1,5 +1,8 @@
 ﻿namespace CurrencyService.Models
 {
+	/// <summary>
+	/// Класс, отвечающий за пагинацию списка курса валют.
+	/// </summary>
 	public class PagingInfo
 	{
 		private const int DEFAULT_ITEMS_PER_PAGE = 5;
