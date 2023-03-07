@@ -16,7 +16,7 @@ namespace CurrencyService
 
 			builder.Services.AddHttpClient("currencyClient", c =>
 			{
-				//URL-адрес списка курсов валют в формате JSON
+				//URL Р°РґСЂРµСЃ СЃРїРёСЃРєР° РєСѓСЂСЃРѕРІ РІР°Р»СЋС‚ РІ С„РѕСЂРјР°С‚Рµ JSON
 				c.BaseAddress = new Uri("https://www.cbr-xml-daily.ru/daily_json.js"); 
 			});
 
